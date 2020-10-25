@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+
+  data-pod:
+    build:
+      context: .
+      dockerfile: dockerfiles/data_app.Dockerfile
+    image: data-app:latest
+    container_name: data-app-container
+    ports:
+      - 80:80
+      - 81:81
+    volumes:
+      - ${DATA_DIRECTORY}:/data
+    command: bash -c "
+      hypercorn api.rest_endpoints:app --bind 0.0.0.0:81
+      & python -m data_app.static_report_generator
+      & streamlit run data_app/streamlit.py --server.port 80
+      "
