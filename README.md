@@ -22,13 +22,17 @@ Working on this. `TODO: Make as simple as possible.`
 - Streamlit is just great
 - Best utility to build customizable dashboards
 
+https://github.com/streamlit/streamlit
+
 ### Automatic EDA: Dataprep vs. SweetViz vs. Pandas-Profiling
-#### Dataprep
+#### dataprep
 - Generates HTML quickly
 - HTML in browser loads slowly
 - Generated reports contain all EDA I would want, except they don't show variable
  correlations in the variable sub-tabs. That said, the correlation plot does this.
-- Plots generated have mouse-over capabilities (HUGE PLUS)
+- Plots generated have mouse-over capabilities
+
+https://github.com/sfu-db/dataprep
 
 #### SweetViz
 - Generates HTML slowly
@@ -37,8 +41,12 @@ Working on this. `TODO: Make as simple as possible.`
 - Plots do not have mouse-over
 - Web page aspect ratios do not display well on non-1080p displays
 
+https://github.com/fbdesignpro/sweetviz
+
 #### Pandas-Profiliing
 - Generates HTML slowly (unless minimal used)
 - HTML in browser loads slowly (but faster than Dataprep)
 - Generated reports lack many EDA features, such as correlations
 - Plots do not have mouse-over 
+
+https://github.com/pandas-profiling/pandas-profiling
