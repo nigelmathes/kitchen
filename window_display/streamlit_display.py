@@ -1,4 +1,12 @@
-""" Application to automatically explore data """
+"""
+The MaitreD is responsible for showing patrons a fully customized menu of the
+HeadChef's offering for this Dish
+
+i.e. Display a web page detailing the processed data. This is the place to distill
+important information based on your processed data set, and describe what it contains
+
+Could include plots, figures, images, videos, etc.
+"""
 from pathlib import Path
 
 import pandas as pd

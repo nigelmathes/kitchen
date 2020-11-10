@@ -14,7 +14,16 @@ services:
     volumes:
       - ${DATA_DIRECTORY}:/data
     command: bash -c "
-      hypercorn api.rest_endpoints:app --bind 0.0.0.0:81
+      hypercorn server..server:app --bind 0.0.0.0:81
       & python -m data_app.static_report_generator
       & streamlit run data_app/streamlit.py --server.port 80
       "
+  test-processing:
+    build:
+      context: .
+      dockerfile: dockerfiles/data_app.Dockerfile
+    image: data-app:latest
+    container_name: test-container
+    volumes:
+      - $HOME/.aws:/root/.aws
+    command: python -m sous_chef.prepare

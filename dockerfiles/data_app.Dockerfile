@@ -19,9 +19,12 @@ RUN pip install fastapi
 RUN pip install hypercorn
 RUN pip install sweetviz
 RUN pip install dataprep
+RUN pip install anyconfig
+RUN pip install s3fs
+RUN pip install fsspec
 
 # Copy data app into container
-ADD . /app
+COPY . /app
 
 # Work in the application directory
 WORKDIR /app

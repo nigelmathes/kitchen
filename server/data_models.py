@@ -3,12 +3,12 @@ Pydantic Data Classes storing data inputs and outputs for this pod
 """
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Union, Dict
+from typing import Any, Union, Dict, Optional
 
 from pydantic import BaseModel
 
 
-class Ingredients(BaseModel):
+class Ingredient(BaseModel):
     """
     Contains input data that will be used to create this dish.
 
@@ -18,12 +18,16 @@ class Ingredients(BaseModel):
     DVC branch/commit which generated it
     Prior node's data lineage
     """
+    # Required parameters
+    location: Union[str, Path]
+    raw_format: str
+    prepared_format: str
 
-    data_source: Union[str, Path]
-    date_generated: datetime.time
-    git_hash: str
-    dvc_hash: str
-    lineage: Dict
+    # Optional parameters
+    date_generated: Optional[datetime] = None
+    git_hash: Optional[str] = None
+    dvc_hash: Optional[str] = None
+    lineage: Optional[Dict] = None
 
 
 class FullCourse(BaseModel):
@@ -34,7 +38,7 @@ class FullCourse(BaseModel):
     """
 
     data_source: Union[str, Path]
-    date_generated: datetime.time
+    date_generated: datetime
     git_hash: str
     dvc_hash: str
     lineage: Dict

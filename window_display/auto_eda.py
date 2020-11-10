@@ -1,3 +1,9 @@
+"""
+These are the wait staff responsible for keeping patrons happy.
+
+i.e. A series of static HTML reports are generated which can be viewed through the
+     API's served at this Restaurant
+"""
 from pathlib import Path
 import sweetviz as sv
 import pandas as pd
