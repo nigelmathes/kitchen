@@ -13,15 +13,24 @@ RUN ln -sv /usr/bin/python3 /usr/bin/python
 RUN pip install --upgrade pip
 
 # Install packages
+# Data exploration/Menu serving packages
 RUN pip install streamlit
-RUN pip install pandas
 RUN pip install fastapi
 RUN pip install hypercorn
 RUN pip install sweetviz
 RUN pip install dataprep
+
+# Config parsing
 RUN pip install anyconfig
+
+# Interact with all data as a file system
 RUN pip install s3fs
 RUN pip install fsspec
+
+# Data science utilities
+RUN pip install pandas
+RUN pip install scikit-learn
+RUN pip install joblib
 
 # Copy data app into container
 COPY . /app

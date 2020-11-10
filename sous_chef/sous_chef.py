@@ -22,7 +22,7 @@ class SousChef:
             self, ingredients: Path = Path("/app/sous_chef/ingredients.yaml")
     ) -> None:
         """
-        Give the Sous Chef the instruction he needs to prepare the data for the Chef
+        Give the Sous Chef the instruction needed to prepare the data for the Chef
 
         i.e. Initialize the following from a YAML configuration file:
              data location (source)
@@ -100,4 +100,3 @@ if __name__ == '__main__':
     sous_chef = SousChef()
     test_ingredients = sous_chef.prepare_ingredients()
     print(test_ingredients)
-

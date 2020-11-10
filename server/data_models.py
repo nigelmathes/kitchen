@@ -36,12 +36,14 @@ class FullCourse(BaseModel):
 
     This is the data that will be sent if a patron orders the full course.
     """
+    # Required parameters
+    location: Union[str, Path]
 
-    data_source: Union[str, Path]
-    date_generated: datetime
-    git_hash: str
-    dvc_hash: str
-    lineage: Dict
+    # Optional parameters
+    date_generated: Optional[datetime] = None
+    git_hash: Optional[str] = None
+    dvc_hash: Optional[str] = None
+    lineage: Optional[Dict] = None
 
 
 class Appetizer(BaseModel):
