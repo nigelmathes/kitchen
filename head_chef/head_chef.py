@@ -17,6 +17,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 from sous_chef.sous_chef import SousChef
 from server.data_models import FullCourse
+from window_display.create_display import create_window_display
 
 
 class HeadChef:
@@ -43,6 +44,7 @@ class HeadChef:
         self.ingredients = sous_chef.prepare_ingredients()
 
         self.full_course = dict()
+
         # Load from full_course.yaml
         for key, value in anyconfig.load(full_course).items():
             self.full_course[key] = FullCourse(**value)
@@ -66,16 +68,30 @@ class HeadChef:
         training_data = self.clean(self.ingredients['titanic_train_data'])
         test_data = self.clean(self.ingredients['titanic_test_data'])
 
-        features = training_data.drop(['Survived', 'PassengerId'], axis=1)
+        # Remove label column
+        features = training_data.drop('Survived', axis=1)
         labels = training_data['Survived']
 
         # Train
-        random_forest_classifier = RandomForestClassifier(n_estimators=1000,
+        random_forest_classifier = RandomForestClassifier(n_estimators=500,
                                                           random_state=42)
         random_forest_classifier.fit(features, labels)
 
         # Save the trained model
         self.save_model(model_to_save=random_forest_classifier)
+
+        # Evaluate the trained model and save results
+        eval_results = pd.DataFrame(random_forest_classifier.predict(test_data),
+                                    columns=['model_predictions'])
+
+        test_data['model_predictions'] = eval_results
+
+        # Save the evaluation results
+        self.save_results(results_to_save=test_data)
+
+        # Create a window display with the results
+        create_window_display(data_to_display=test_data, display_name="model_results",
+                              display_type="dataprep")
 
     @staticmethod
     def clean(data_to_clean: pd.DataFrame) -> pd.DataFrame:
@@ -130,7 +146,8 @@ class HeadChef:
             "Ticket",
             "Cabin",
             "SibSp",
-            "Parch"
+            "Parch",
+            "PassengerId"
         ]
         data_to_clean.drop(drop_elements, axis=1, inplace=True)
 
@@ -166,6 +183,21 @@ class HeadChef:
             file_system.put_file(lpath=temporary_save_path, rpath=model_output_path)
 
         return None
+
+    def save_results(self, results_to_save: pd.DataFrame) -> None:
+        """
+        Save model results
+
+        Args:
+            results_to_save (pd.DataFrame): Prediction results from a trained model
+
+        Returns:
+            None: But, saves a CSV containing model prediction results
+        """
+        save_location = self.full_course["model_results"].location
+
+        with fsspec.open(save_location, mode='w') as fs_file:
+            results_to_save.to_csv(path_or_buf=fs_file, index=False)
 
 
 if __name__ == '__main__':

@@ -12,12 +12,10 @@ services:
       - 80:80
       - 81:81
     volumes:
-      - ${DATA_DIRECTORY}:/data
+      - $HOME/.aws:/root/.aws
     command: bash -c "
       python -m head_chef.head_chef
-      & hypercorn server..server:app --bind 0.0.0.0:81
-      & python -m data_app.static_report_generator
-      & streamlit run data_app/streamlit.py --server.port 80
+      & hypercorn server.server:app --bind 0.0.0.0:81
       "
   test:
     build:

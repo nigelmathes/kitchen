@@ -10,6 +10,7 @@ import fsspec
 import pandas as pd
 
 from server.data_models import Ingredient
+from window_display.create_display import create_window_display
 
 
 class SousChef:
@@ -55,12 +56,12 @@ class SousChef:
 
         for name, ingredient in self.ingredients.items():
             ingredients_to_deliver[name] = self.prepare_one_ingredient(
-                ingredient=ingredient
+                ingredient=ingredient, name=name
             )
 
         return ingredients_to_deliver
 
-    def prepare_one_ingredient(self, ingredient: Ingredient) -> Any:
+    def prepare_one_ingredient(self, ingredient: Ingredient, name: str) -> Any:
         """
         Prepare one ingredient by using Ingredient.raw_format and
         Ingredient.prepared_format to identify the correct function to read
@@ -68,6 +69,7 @@ class SousChef:
 
         Args:
             ingredient (Ingredient): One ingredient, which is the dataclass Ingredient
+            name (str): The name of the ingredient
 
         Returns:
             (Any) Data loaded into a Python data structure, such as a Pandas DataFrame
@@ -78,6 +80,9 @@ class SousChef:
                 output_type=ingredient.prepared_format
             )
             loaded_data = extract_function(input_file)
+
+        create_window_display(data_to_display=loaded_data, display_name=name,
+                              display_type="sweetviz")
 
         return loaded_data
 

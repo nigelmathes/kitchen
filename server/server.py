@@ -4,14 +4,21 @@ REST endpoints to discover, inspect, and acquire data produced in the data pod
 from pathlib import Path
 from typing import Union
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, HTMLResponse, PlainTextResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
+app.mount(
+    "/reports", StaticFiles(directory="static_reports", html=True), name="reports"
+)
+templates = Jinja2Templates(directory="static_reports")
+
 
 @app.get("/data_products")
-async def data_products() -> JSONResponse:
+async def get_data_products() -> JSONResponse:
     """
     Gets available data products
 
@@ -22,47 +29,23 @@ async def data_products() -> JSONResponse:
     return JSONResponse("Not Implemented")
 
 
-@app.get("/sweetviz")
-async def sweetviz_report() -> Union[HTMLResponse, PlainTextResponse]:
+@app.get("/reports", response_class=HTMLResponse)
+async def get_reports(request: Request) -> Jinja2Templates.TemplateResponse:
     """
-    Shows the SweetViz report
+    Display an index page which links to all generated reports
 
     Returns:
-        HTMLResponse: HTML in ../static_reports/sweetviz.html
+        Jinja2Templates.TemplateResponse: HTML page linking to data reports
     """
-    # encoding='utf-8'
-    path_to_html = Path("/app") / "static_reports" / "sweetviz.html"
+    path_to_html_reports = Path("/app") / "static_reports"
 
-    try:
-        with open(path_to_html) as html_file:
-            html_content = html_file.read()
-    except FileNotFoundError:
-        return PlainTextResponse(
-            content="Your report hasn't been made yet! Check back later.",
-            status_code=200
-        )
+    available_reports = list(path_to_html_reports.glob("*.html"))
 
-    return HTMLResponse(content=html_content, status_code=200)
+    reports = list()
+    for report in sorted(available_reports):
+        if "index.html" not in str(report):
+            reports.append((f"{str(report.stem)}", f"reports/{str(report.name)}"))
 
-
-@app.get("/dataprep")
-async def dataprep_report() -> Union[HTMLResponse, PlainTextResponse]:
-    """
-    Shows the DataPrep report
-
-    Returns:
-        HTMLResponse: HTML in ../static_reports/dataprep.html
-    """
-    # encoding='utf-8'
-    path_to_html = Path("/app") / "static_reports" / "dataprep.html"
-
-    try:
-        with open(path_to_html) as html_file:
-            html_content = html_file.read()
-    except FileNotFoundError:
-        return PlainTextResponse(
-            content="Your report hasn't been made yet! Check back later.",
-            status_code=200
-        )
-
-    return HTMLResponse(content=html_content, status_code=200)
+    return templates.TemplateResponse(
+        "index.html", {"request": request, "reports": reports}
+    )

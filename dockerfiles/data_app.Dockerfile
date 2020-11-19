@@ -13,12 +13,17 @@ RUN ln -sv /usr/bin/python3 /usr/bin/python
 RUN pip install --upgrade pip
 
 # Install packages
-# Data exploration/Menu serving packages
-RUN pip install streamlit
+# API serving packages
+
 RUN pip install fastapi
 RUN pip install hypercorn
+RUN pip install aiofiles
+RUN pip install jinja2
+
+# Data exploration tools
 RUN pip install sweetviz
 RUN pip install dataprep
+RUN pip install streamlit
 
 # Config parsing
 RUN pip install anyconfig

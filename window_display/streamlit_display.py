@@ -7,36 +7,40 @@ important information based on your processed data set, and describe what it con
 
 Could include plots, figures, images, videos, etc.
 """
-from pathlib import Path
+from typing import Dict
 
 import pandas as pd
 import streamlit as st
 
-DATA_DIR = Path("/data")
+from sous_chef.sous_chef import SousChef
 
-st.title("US Census Data")
+st.title("Demo Data")
 
 
 @st.cache
-def load_data(path_to_data: Path) -> pd.DataFrame:
+def load_data() -> Dict[str, pd.DataFrame]:
     """
-    Load data from the /data directory
+    Load the Dishes prepared by the HeadChef
+
+    i.e. Load the data produced by this repository
 
     Note:
         Streamlit caching does not play nicely with Modin[Dask] or Modin[Ray],
         so we use vanilla Pandas for now.
 
-    Args:
-        path_to_data (Path): Full path to data file
-
     Returns:
-        pd.DataFrame: Pandas DataFrame containing data
+        Dict[str, pd.DataFrame]: Dictionary of keys defined in
+                                 head_chef/full_course.yaml, mapping to a
+                                 Pandas DataFrame
     """
-    return pd.read_csv(path_to_data)
+    sous_chef = SousChef()
+    data_sources = sous_chef.prepare_ingredients()
+
+    return data_sources
 
 
 # Load data
-data = load_data(DATA_DIR / "census.csv")
-
-st.subheader("Raw data")
-st.write(data)
+all_data = load_data()
+for data_name, data in all_data.items():
+    st.subheader(f"{data_name}")
+    st.write(data)
