@@ -36,6 +36,7 @@ RUN pip install fsspec
 RUN pip install pandas
 RUN pip install scikit-learn
 RUN pip install joblib
+RUN pip install opencv-python-headless
 
 # Copy data app into container
 COPY . /app

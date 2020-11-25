@@ -2,7 +2,6 @@
 REST endpoints to discover, inspect, and acquire data produced in the data pod
 """
 from pathlib import Path
-from typing import Union
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, HTMLResponse, PlainTextResponse
@@ -49,3 +48,15 @@ async def get_reports(request: Request) -> Jinja2Templates.TemplateResponse:
     return templates.TemplateResponse(
         "index.html", {"request": request, "reports": reports}
     )
+
+
+@app.get("/custom_report")
+async def get_custom_report() -> HTMLResponse:
+    """
+    Display link to the custom Streamlit report
+
+    Returns:
+        HTMLResponse: The link to the custom Streamlit report
+    """
+    html_link = '<a href="http://localhost:80">Custom Report</a>'
+    return HTMLResponse(html_link)

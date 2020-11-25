@@ -18,6 +18,7 @@ class Ingredient(BaseModel):
     DVC branch/commit which generated it
     Prior node's data lineage
     """
+
     # Required parameters
     location: Union[str, Path]
     raw_format: str
@@ -36,6 +37,7 @@ class FullCourse(BaseModel):
 
     This is the data that will be sent if a patron orders the full course.
     """
+
     # Required parameters
     location: Union[str, Path]
 

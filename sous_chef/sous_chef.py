@@ -10,7 +10,7 @@ import fsspec
 import pandas as pd
 
 from server.data_models import Ingredient
-from window_display.create_display import create_window_display
+from window_display.auto_display import create_window_display
 
 
 class SousChef:
@@ -101,7 +101,7 @@ class SousChef:
             return pd.read_json
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sous_chef = SousChef()
     test_ingredients = sous_chef.prepare_ingredients()
     print(test_ingredients)

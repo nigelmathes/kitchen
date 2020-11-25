@@ -19,9 +19,9 @@ def create_window_display(
     data_to_display: pd.DataFrame, display_name: str, display_type: str = "dataprep",
 ) -> None:
     """
-    Create a window display to advertise your dish
+    Create a window display from a table of data to advertise your dish
 
-    i.e. Create an automatic EDA report for your data which will be viewable
+    i.e. Create an automatic EDA report for table data which will be viewable
          through the web API using one of the following auto-EDA tools:
              "sweetviz", "dataprep"
 
@@ -43,8 +43,9 @@ def create_window_display(
     elif display_type == "sweetviz":
         print(f"Generating {display_type} report for {display_name}")
         sweetviz_report = sv.analyze(data_to_display)
-        sweetviz_report.show_html(filepath=STATIC_DIR / f"{display_name}.html",
-                                  open_browser=False)
+        sweetviz_report.show_html(
+            filepath=STATIC_DIR / f"{display_name}.html", open_browser=False
+        )
         del sweetviz_report
 
     else:
