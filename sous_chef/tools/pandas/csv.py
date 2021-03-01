@@ -1,38 +1,39 @@
-from typing import List
+import pandas as pd
 
 from sous_chef.tools.tool import Tool
 
 
-class Text(Tool):
+class Csv(Tool):
     """
-    Loads/saves text data as a Python list from/to a text file
+    Loads/saves CSV data as a Pandas DataFrame from/to a text file
     on any ``fsspec``-supported file-like system
     """
-    def load(self) -> List[str]:
+    def load(self) -> pd.DataFrame:
         """
-        Load text data from a text file split on new line characters
+        Load text data from a CSV file into a Pandas DataFrame
 
         Returns:
-            List[str]: Loaded text data
+            pd.DataFrame: Loaded CSV data
         """
         with self.filesystem.open(self.filepath) as fs_file:
-            text_data = fs_file.read().split('\n')
+            csv_data = pd.read_csv(fs_file)
 
-        return list(filter(None, text_data))
+        return csv_data
 
-    def save(self, data: List[str]) -> None:
+    def save(self, data: pd.DataFrame) -> None:
         """
-        Save a list of strings to a text file
+        Save a Pandas DataFrame as a CSV file
 
         Args:
-            data (List[str]): A list of strings
+            data (pd.DataFrame): A Pandas DataFrame containing data to save
 
         Returns:
             None
         """
         with self.filesystem.open(self.filepath) as fs_file:
-            for entry in data:
-                fs_file.write(entry)
+            data.to_csv(fs_file, index=False)
+
+        return None
 
     def exists(self) -> bool:
         """
