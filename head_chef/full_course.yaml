@@ -1,5 +1,9 @@
 classifier_model:
   location: "s3://demo-supplier-data/titanic_classification_model.job"
+  python_format: "scikit"
+  file_format: "joblib_file"
 
 model_results:
   location: "s3://demo-supplier-data/titanic_classification_results.csv"
+  python_format: "pandas"
+  file_format: "csv_file"

@@ -2,12 +2,11 @@
 The Sous Chef Prepares the Ingredients
 I.e. the extract stage of your ETL process.
 """
+from importlib import import_module
 from pathlib import Path
 from typing import Dict, Any, Callable
 
 import anyconfig
-import fsspec
-import pandas as pd
 
 from server.data_models import Ingredient
 from window_display.auto_display import create_window_display
@@ -19,8 +18,9 @@ class SousChef:
 
     i.e. Extract data and prepare it for processing
     """
+
     def __init__(
-            self, ingredients: Path = Path("/app/sous_chef/ingredients.yaml")
+        self, ingredients: Path = Path("/app/sous_chef/ingredients.yaml")
     ) -> None:
         """
         Give the Sous Chef the instruction needed to prepare the data for the Chef
@@ -28,7 +28,7 @@ class SousChef:
         i.e. Initialize the following from a YAML configuration file:
              data location (source)
              type of data (source_type)
-             the type of the output data (output_type)
+             the type of the output data (prepared_foramed)
 
         Args:
             ingredients (Path): A YAML file within the sous_chef directory containing
@@ -74,31 +74,47 @@ class SousChef:
         Returns:
             (Any) Data loaded into a Python data structure, such as a Pandas DataFrame
         """
-        with fsspec.open(ingredient.location) as input_file:
-            extract_function = self.prepare_tools(
-                input_type=ingredient.raw_format,
-                output_type=ingredient.prepared_format
-            )
-            loaded_data = extract_function(input_file)
+        # Find the right tool for the job (data loading)
+        tool = self.prepare_tools(python_format=ingredient.python_format,
+                                  file_format=ingredient.file_format)
 
-        create_window_display(data_to_display=loaded_data, display_name=name,
-                              display_type="sweetviz")
+        # Instantiate object
+        data_load_tool = tool(filepath=ingredient.location)
+
+        # Load data
+        loaded_data = data_load_tool.load()
+
+        # Create data overview display
+        create_window_display(
+            data_to_display=loaded_data, display_name=name, display_type="sweetviz"
+        )
 
         return loaded_data
 
     @staticmethod
-    def prepare_tools(input_type: str, output_type: str) -> Callable:
+    def prepare_tools(python_format: str, file_format: str) -> Callable:
         """
-        Find the right load function to take the ingredients from their raw form
+        Find the right class to take the ingredients from their raw form
         to their prepared form
+
+        Args:
+            python_format (str): The Python data type to read the data into, such
+                                   as 'pandas'
+            file_format (str): The raw data format, such as 'csv'
 
         Returns:
             (Callable): The function to Extract the data
         """
-        if input_type == "csv" and output_type == "pandas.DataFrame":
-            return pd.read_csv
-        if input_type == "json" and output_type == "pandas.DataFrame":
-            return pd.read_json
+        # Create the string to import the module needed to load the data
+        file_to_import_from = f"tools.{python_format}.{file_format}"
+
+        # Cast to CamelCase for class name
+        tool_to_import = ''.join(word.title() for word in file_format.split('_'))
+
+        # Import class
+        tool_to_use = getattr(import_module(file_to_import_from), tool_to_import)
+
+        return tool_to_use
 
 
 if __name__ == "__main__":

@@ -21,8 +21,8 @@ class Ingredient(BaseModel):
 
     # Required parameters
     location: Union[str, Path]
-    raw_format: str
-    prepared_format: str
+    file_format: str
+    python_format: str
 
     # Optional parameters
     date_generated: Optional[datetime] = None
@@ -40,6 +40,8 @@ class FullCourse(BaseModel):
 
     # Required parameters
     location: Union[str, Path]
+    file_format: str
+    python_format: str
 
     # Optional parameters
     date_generated: Optional[datetime] = None

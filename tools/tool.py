@@ -1,6 +1,6 @@
 import abc
 
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import fsspec
 from fsspec.utils import infer_storage_options
@@ -28,29 +28,36 @@ class Tool(abc.ABC):
                                           filesystem as keys and values.
                                           e.g. {"my_token": "ABCD1234"}
         """
-        self.protocol, self.filepath = infer_storage_options(filepath)
+        storage_options = infer_storage_options(filepath)
+        self.protocol = storage_options["protocol"]
+        self.filepath = storage_options["path"]
+
+        if not credentials:
+            credentials = {}
 
         self.filesystem = fsspec.filesystem(protocol=self.protocol, **credentials)
 
     @abc.abstractmethod
     def load(self) -> Any:
         """
-        The method used to load data
+        Load data
         """
-        raise NotImplementedError("You are using the Tool base class, and must "
+        raise NotImplementedError("You are using the Tool base class and must "
                                   "implement a load() method")
 
     @abc.abstractmethod
     def save(self, data: Any) -> None:
         """
-        The method used to save data
+        Save data
         """
-        raise NotImplementedError("You are using the Tool base class, and must "
+        raise NotImplementedError("You are using the Tool base class and must "
                                   "implement a save() method")
 
-    @abc.abstractmethod
     def exists(self) -> bool:
         """
-        Check if a file exists
+        Check if a text file exists
+
+        Returns:
+            bool: True if the file exists, otherwise False
         """
-        return False
+        return self.filesystem.exists(self.filepath)

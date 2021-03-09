@@ -1,9 +1,9 @@
 import pandas as pd
 
-from sous_chef.tools.tool import Tool
+from tools.tool import Tool
 
 
-class Csv(Tool):
+class CsvFile(Tool):
     """
     Loads/saves CSV data as a Pandas DataFrame from/to a text file
     on any ``fsspec``-supported file-like system
@@ -15,7 +15,7 @@ class Csv(Tool):
         Returns:
             pd.DataFrame: Loaded CSV data
         """
-        with self.filesystem.open(self.filepath) as fs_file:
+        with self.filesystem.open(path=self.filepath) as fs_file:
             csv_data = pd.read_csv(fs_file)
 
         return csv_data
@@ -30,16 +30,7 @@ class Csv(Tool):
         Returns:
             None
         """
-        with self.filesystem.open(self.filepath) as fs_file:
-            data.to_csv(fs_file, index=False)
+        with self.filesystem.open(path=self.filepath, mode='w') as fs_file:
+            data.to_csv(path_or_buf=fs_file, index=False)
 
         return None
-
-    def exists(self) -> bool:
-        """
-        Check if a text file exists
-
-        Returns:
-            bool: True if the file exists, otherwise False
-        """
-        return self.filesystem.exists(self.filepath)

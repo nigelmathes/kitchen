@@ -1,9 +1,9 @@
 titanic_train_data:
   location: "s3://demo-supplier-data/titanic_train.csv"
-  raw_format: "csv"
-  prepared_format: "pandas.DataFrame"
+  file_format: "csv_file"
+  python_format: "pandas"
 
 titanic_test_data:
   location: "s3://demo-supplier-data/titanic_test.csv"
-  raw_format: "csv"
-  prepared_format: "pandas.DataFrame"
+  file_format: "csv_file"
+  python_format: "pandas"

@@ -2,17 +2,13 @@
 The Head Chef Cooks the Final Dish
 I.e. the transform stage of your ETL process.
 """
-import tempfile
-
+from importlib import import_module
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import anyconfig
-import fsspec
-import joblib
 import pandas as pd
 
-from fsspec.utils import infer_storage_options
 from sklearn.ensemble import RandomForestClassifier
 
 from sous_chef.sous_chef import SousChef
@@ -46,10 +42,17 @@ class HeadChef:
         self.ingredients = sous_chef.prepare_ingredients()
 
         self.full_course = dict()
+        self.tools = dict()
 
         # Load from full_course.yaml
         for key, value in anyconfig.load(full_course).items():
             self.full_course[key] = FullCourse(**value)
+
+            # Find the right tool for the job (data saving)
+            self.tools[key] = self.prepare_tools(
+                python_format=self.full_course[key].python_format,
+                file_format=self.full_course[key].file_format,
+            )
 
     def cook(self) -> Any:
         """
@@ -81,7 +84,9 @@ class HeadChef:
         random_forest_classifier.fit(features, labels)
 
         # Save the trained model
-        self.save_model(model_to_save=random_forest_classifier)
+        model_tool = self.tools["classifier_model"](filepath=self.full_course[
+            "classifier_model"].location)
+        model_tool.save(data=random_forest_classifier)
 
         # Evaluate the trained model and save results
         eval_results = pd.DataFrame(
@@ -91,7 +96,9 @@ class HeadChef:
         test_data["model_predictions"] = eval_results
 
         # Save the evaluation results
-        self.save_results(results_to_save=test_data)
+        results_tool = self.tools["model_results"](filepath=self.full_course[
+            "model_results"].location)
+        results_tool.save(data=test_data)
 
         # Create a window display with the results
         create_window_display(
@@ -158,50 +165,30 @@ class HeadChef:
 
         return data_to_clean
 
-    def save_model(self, model_to_save: RandomForestClassifier) -> None:
+    @staticmethod
+    def prepare_tools(python_format: str, file_format: str) -> Callable:
         """
-        Save a trained model
+        Find the right class to take the ingredients from their raw (file) format
+        to their prepared (python) format
 
         Args:
-            model_to_save (RandomForestClassifier): A trained random forest model
+            python_format (str): The Python data type to read the data into, such
+                                 as 'pandas'
+            file_format (str): The format of the file to read, such as 'csv'
 
         Returns:
-            None: But, saves a sklearn model using joblib
+            (Callable): The function to extract the data
         """
-        # Get the save path for the model and extract the file system protocol
-        save_parameters = infer_storage_options(
-            self.full_course["classifier_model"].location
-        )
-        protocol = save_parameters["protocol"]
-        model_output_path = save_parameters["path"]
+        # Create the string to import the module needed to load the data
+        file_to_import_from = f"tools.{python_format}.{file_format}"
 
-        # Get only the file name
-        model_name = Path(model_output_path).name
+        # Cast to CamelCase for class name
+        tool_to_import = ''.join(word.title() for word in file_format.split('_'))
 
-        # Save to /tmp/ before using fssspec to move it to its final destination
-        with tempfile.TemporaryDirectory() as temp_directory:
-            temporary_save_path = Path(temp_directory) / model_name
-            joblib.dump(value=model_to_save, filename=temporary_save_path)
+        # Import class
+        tool_to_use = getattr(import_module(file_to_import_from), tool_to_import)
 
-            file_system = fsspec.filesystem(protocol=protocol)
-            file_system.put_file(lpath=temporary_save_path, rpath=model_output_path)
-
-        return None
-
-    def save_results(self, results_to_save: pd.DataFrame) -> None:
-        """
-        Save model results
-
-        Args:
-            results_to_save (pd.DataFrame): Prediction results from a trained model
-
-        Returns:
-            None: But, saves a CSV containing model prediction results
-        """
-        save_location = self.full_course["model_results"].location
-
-        with fsspec.open(save_location, mode="w") as fs_file:
-            results_to_save.to_csv(path_or_buf=fs_file, index=False)
+        return tool_to_use
 
 
 if __name__ == "__main__":

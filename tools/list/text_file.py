@@ -1,9 +1,9 @@
 from typing import List
 
-from sous_chef.tools.tool import Tool
+from tools.tool import Tool
 
 
-class Text(Tool):
+class TextFile(Tool):
     """
     Loads/saves text data as a Python list from/to a text file
     on any ``fsspec``-supported file-like system
@@ -15,7 +15,7 @@ class Text(Tool):
         Returns:
             List[str]: Loaded text data
         """
-        with self.filesystem.open(self.filepath) as fs_file:
+        with self.filesystem.open(path=self.filepath) as fs_file:
             text_data = fs_file.read().split('\n')
 
         return list(filter(None, text_data))
@@ -30,15 +30,6 @@ class Text(Tool):
         Returns:
             None
         """
-        with self.filesystem.open(self.filepath) as fs_file:
+        with self.filesystem.open(path=self.filepath, mode='wb') as fs_file:
             for entry in data:
                 fs_file.write(entry)
-
-    def exists(self) -> bool:
-        """
-        Check if a text file exists
-
-        Returns:
-            bool: True if the file exists, otherwise False
-        """
-        return self.filesystem.exists(self.filepath)
