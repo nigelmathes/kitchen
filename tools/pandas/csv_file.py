@@ -15,8 +15,8 @@ class CsvFile(Tool):
         Returns:
             pd.DataFrame: Loaded CSV data
         """
-        with self.filesystem.open(path=self.filepath) as fs_file:
-            csv_data = pd.read_csv(fs_file)
+        with self.filesystem.open(path=self.filepath) as file:
+            csv_data = pd.read_csv(file)
 
         return csv_data
 
@@ -30,7 +30,7 @@ class CsvFile(Tool):
         Returns:
             None
         """
-        with self.filesystem.open(path=self.filepath, mode='w') as fs_file:
-            data.to_csv(path_or_buf=fs_file, index=False)
+        with self.filesystem.open(path=self.filepath, mode='w') as file:
+            data.to_csv(file, index=False)
 
         return None

@@ -15,8 +15,8 @@ class TextFile(Tool):
         Returns:
             List[str]: Loaded text data
         """
-        with self.filesystem.open(path=self.filepath) as fs_file:
-            text_data = fs_file.read().split('\n')
+        with self.filesystem.open(path=self.filepath) as file:
+            text_data = file.read().split('\n')
 
         return list(filter(None, text_data))
 
@@ -30,6 +30,6 @@ class TextFile(Tool):
         Returns:
             None
         """
-        with self.filesystem.open(path=self.filepath, mode='wb') as fs_file:
+        with self.filesystem.open(path=self.filepath, mode='wb') as file:
             for entry in data:
-                fs_file.write(entry)
+                file.write(entry)

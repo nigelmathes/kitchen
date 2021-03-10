@@ -1,4 +1,4 @@
-FROM python:3.8.6-slim-buster
+FROM python:3.9.2-slim-buster
 
 # The enviroment variable ensures that the python output is set straight
 # to the terminal without buffering it first
@@ -13,8 +13,9 @@ RUN ln -sv /usr/bin/python3 /usr/bin/python
 RUN pip install --upgrade pip
 
 # Install packages
-# API serving packages
+# Data IO packages
 
+# API serving packages
 RUN pip install fastapi
 RUN pip install hypercorn
 RUN pip install aiofiles
