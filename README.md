@@ -16,9 +16,9 @@ localhost:80           # Streamlit dashboard (Customizable EDA)
 ## Installation
 Clone repo, then:
 
-'''bash
-docker-compose up --build 
-''''
+```bash
+docker-compose up --build kitchen
+```
 
 `TODO: Make as simple as possible.`
 
