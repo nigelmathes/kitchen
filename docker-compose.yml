@@ -2,12 +2,12 @@ version: "3.8"
 
 services:
 
-  data-pod:
+  kitchen:
     build:
       context: .
-      dockerfile: dockerfiles/data_app.Dockerfile
-    image: data-app:latest
-    container_name: data-app-container
+      dockerfile: dockerfiles/kitchen.Dockerfile
+    image: kitchen:latest
+    container_name: kitchen-container
     ports:
       - 80:80
       - 81:81
@@ -18,12 +18,13 @@ services:
       & hypercorn server.server:app --bind 0.0.0.0:81
       & streamlit run window_display/custom_display.py --server.port 80
       "
+
   test:
     build:
       context: .
-      dockerfile: dockerfiles/data_app.Dockerfile
-    image: data-app:latest
-    container_name: test-container
+      dockerfile: dockerfiles/kitchen.Dockerfile
+    image: kitchen:latest
+    container_name: test-kitchen
     volumes:
       - $HOME/.aws:/root/.aws
     command: python -m head_chef.head_chef

@@ -14,7 +14,13 @@ localhost:80           # Streamlit dashboard (Customizable EDA)
 ```
 
 ## Installation
-Working on this. `TODO: Make as simple as possible.`
+Clone repo, then:
+
+'''bash
+docker-compose up --build 
+''''
+
+`TODO: Make as simple as possible.`
 
 ## Why did I choose ____ when I could have chosen ____?
 
