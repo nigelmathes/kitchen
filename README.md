@@ -1,5 +1,5 @@
-# Data Pod
-A deployable solution to transform data processing into servable, discoverable, and
+# Kitchen
+A containerized kitchen to transform data processing into servable, discoverable, and
  understandable data products.
  
 Combine the best open source utilities for Data Science & Engineering.
@@ -20,7 +20,7 @@ Working on this. `TODO: Make as simple as possible.`
 
 ### Streamlit vs. ???
 - Streamlit is just great
-- Best utility to build customizable dashboards
+- Best utility to build customizable dashboards in Python
 
 https://github.com/streamlit/streamlit
 
