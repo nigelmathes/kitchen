@@ -15,11 +15,12 @@ services:
       - 8888:8888
     volumes:
       - $HOME/.aws:/root/.aws
+    restart: unless-stopped
     command: bash -c "
       jupyter lab --ip=0.0.0.0 --allow-root --no-browser
       & hypercorn server.server:app --bind 0.0.0.0:81
       & streamlit run window_display/custom_display.py --server.port 80
-      & code-server --bind-addr 0.0.0.0:8443 --auth none
+      & code-server --bind-addr 0.0.0.0:8443 --auth none --disable-telemetry --cert
       "
 
   test:
