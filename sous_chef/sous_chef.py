@@ -9,7 +9,6 @@ from typing import Dict, Any, Callable
 import anyconfig
 
 from server.data_models import Ingredient
-from window_display.auto_display import create_window_display
 
 
 class SousChef:
@@ -83,11 +82,6 @@ class SousChef:
 
         # Load data
         loaded_data = data_load_tool.load()
-
-        # Create data overview display
-        create_window_display(
-            data_to_display=loaded_data, display_name=name, display_type="sweetviz"
-        )
 
         return loaded_data
 
