@@ -1,0 +1,15 @@
+{
+    "[python]": {
+        "editor.formatOnPaste": false,
+        "editor.defaultFormatter": "ms-python.python",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": true
+         }
+    },
+    "terminal.integrated.env.linux": {"PYTHONPATH": "${workspaceFolder}"},
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.linting.pylintArgs": ["--disable=F0401"],
+    "python.formatting.provider": "black",
+    "workbench.colorTheme": "Default Dark+"
+}

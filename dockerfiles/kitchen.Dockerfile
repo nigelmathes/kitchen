@@ -1,11 +1,11 @@
-FROM python:3.9.2-slim-buster
+FROM python:3.9.5-slim-buster
 
 # The enviroment variable ensures that the python output is set straight
 # to the terminal without buffering it first
 ENV PYTHONUNBUFFERED 1
 
 # Instal gcc compiler to build dependencies and link the python and python3 commands
-RUN apt-get update && apt-get install -y gcc && \
+RUN apt-get update && apt-get install -y gcc curl git && \
     rm -rf /var/lib/apt/lists/*
 RUN ln -sv /usr/bin/python3 /usr/bin/python
 
@@ -38,6 +38,20 @@ RUN pip install pandas
 RUN pip install scikit-learn
 RUN pip install joblib
 RUN pip install opencv-python-headless
+RUN pip install jupyterlab
+
+# Install VS Code-Server and useful Python Extensions
+RUN curl -fsSL https://code-server.dev/install.sh | sh
+RUN code-server --install-extension ms-python.python --force
+RUN code-server --install-extension njpwerner.autodocstring	--force
+RUN code-server --install-extension LittleFoxTeam.vscode-python-test-adapter --force
+RUN code-server --install-extension dongli.python-preview --force
+RUN code-server --install-extension streetsidesoftware.code-spell-checker --force
+RUN code-server --install-extension CoenraadS.bracket-pair-colorizer-2 --force
+
+# Python formatting and linting support
+RUN pip install black
+RUN pip install pylint
 
 # Copy data app into container
 COPY . /app
