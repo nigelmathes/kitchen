@@ -46,7 +46,6 @@ RUN code-server --install-extension ms-python.python --force
 RUN code-server --install-extension njpwerner.autodocstring	--force
 RUN code-server --install-extension LittleFoxTeam.vscode-python-test-adapter --force
 RUN code-server --install-extension dongli.python-preview --force
-RUN code-server --install-extension streetsidesoftware.code-spell-checker --force
 RUN code-server --install-extension CoenraadS.bracket-pair-colorizer-2 --force
 
 # Python formatting and linting support
