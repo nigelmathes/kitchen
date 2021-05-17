@@ -47,6 +47,7 @@ RUN code-server --install-extension njpwerner.autodocstring	--force
 RUN code-server --install-extension LittleFoxTeam.vscode-python-test-adapter --force
 RUN code-server --install-extension dongli.python-preview --force
 RUN code-server --install-extension CoenraadS.bracket-pair-colorizer-2 --force
+RUN code-server --install-extension jdinhlife.gruvbox --force
 
 # Python formatting and linting support
 RUN pip install black
