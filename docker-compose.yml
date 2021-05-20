@@ -2,12 +2,13 @@ version: "3.8"
 
 services:
 
-  kitchen:
+  dev-kitchen:
     build:
       context: .
       dockerfile: dockerfiles/kitchen.Dockerfile
-    image: kitchen:latest
-    container_name: kitchen-container
+      target: dev-kitchen
+    image: dev-kitchen:latest
+    container_name: dev-kitchen-container
     ports:
       - 80:80
       - 81:81
@@ -23,12 +24,13 @@ services:
       & code-server --bind-addr 0.0.0.0:8443 --auth none --disable-telemetry --cert
       "
 
-  test:
+  base-kitchen:
     build:
       context: .
       dockerfile: dockerfiles/kitchen.Dockerfile
-    image: kitchen:latest
-    container_name: test-kitchen
+      target: base-kitchen
+    image: base-kitchen:latest
+    container_name: base-kitchen-container
     volumes:
       - $HOME/.aws:/root/.aws
     command: python -m head_chef.head_chef

@@ -1,4 +1,5 @@
-FROM python:3.9.5-slim-buster
+# 1st stage: Base Kitchen dependencies
+FROM python:3.9.5-slim-buster AS base-kitchen
 
 # The enviroment variable ensures that the python output is set straight
 # to the terminal without buffering it first
@@ -22,7 +23,6 @@ RUN pip install aiofiles
 RUN pip install jinja2
 
 # Data exploration tools
-RUN pip install sweetviz
 RUN pip install dataprep
 RUN pip install streamlit
 
@@ -38,6 +38,17 @@ RUN pip install pandas
 RUN pip install scikit-learn
 RUN pip install joblib
 RUN pip install opencv-python-headless
+
+# Copy data app into container
+COPY . /app
+
+# Work in the application directory
+WORKDIR /app
+
+# 2nd stage: Dev dependencies
+FROM base-kitchen AS dev-kitchen
+
+# Jupyter Lab
 RUN pip install jupyterlab
 
 # Install VS Code-Server and useful Python Extensions
@@ -52,9 +63,3 @@ RUN code-server --install-extension jdinhlife.gruvbox --force
 # Python formatting and linting support
 RUN pip install black
 RUN pip install pylint
-
-# Copy data app into container
-COPY . /app
-
-# Work in the application directory
-WORKDIR /app

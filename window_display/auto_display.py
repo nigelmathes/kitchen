@@ -1,8 +1,8 @@
 """
-This is the window display, showing off the input ingredients for this Dish.
+This is the window display, showing off data making up this Dish.
 
-i.e. A series of static HTML reports are generated which can be viewed through the
-     API's served at this Restaurant
+i.e. A series of static HTML reports can be generated which will be served
+     through the API served at this Restaurant
 """
 from pathlib import Path
 
