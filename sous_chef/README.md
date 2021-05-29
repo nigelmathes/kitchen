@@ -16,18 +16,23 @@ name_of_data:
   location: "s3://demo-supplier-data/titanic_train.csv"
   # raw_format is the file type of the data you want to read (extract), often
   # the file extension (e.g. for train.json, raw_format is "json")
-  raw_format: "csv"
+  raw_format: "csv_file"
   # prepared_format is the Python data structure you want to load your data
   # into (e.g. for a Pandas DataFrame, this is "pandas.DataFrame")
   prepared_format: "pandas.DataFrame"
 ```
 
 ### Types available for `raw_format`:
-`csv`, `json`
+`csv_file`, `json_file`, `yaml_file`, `text_file`, `joblib_file`
 
 _More coming soon!_
 
 ### Types available for `prepared_format`:
-`pandas.DataFrame`
+`pandas.DataFrame`, `scikit`, `list`, `dict`
 
 _More coming soon!_
+
+# To run:
+```bash
+python -m sous_chef.sous_chef
+```

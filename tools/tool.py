@@ -5,6 +5,8 @@ from typing import Any, Dict
 import fsspec
 from fsspec.utils import infer_storage_options
 
+from server.data_models import SourceTraceability
+
 
 class Tool(abc.ABC):
     """
@@ -18,10 +20,10 @@ class Tool(abc.ABC):
         credentials: Dict[str, Any] = None,
     ) -> None:
         """
-        Instantiate a ``Text`` object referencing a text file
+        Instantiate a ``Tool`` object, meant to save and load data
 
         Args:
-            filepath (Path): Filepath to a text file. May include protocol prefix,
+            filepath (Path): Filepath to a file. May include protocol prefix,
                              e.g. `s3://`. With no prefix, assumes local filesystem.
                              Prefixes can include any protocol supported by ``fsspec``
             credentials (Dict[str, Any]): Credentials required to access to the
@@ -55,9 +57,21 @@ class Tool(abc.ABC):
 
     def exists(self) -> bool:
         """
-        Check if a text file exists
+        Check if a file exists
 
         Returns:
             bool: True if the file exists, otherwise False
         """
         return self.filesystem.exists(self.filepath)
+
+    def source(self) -> SourceTraceability:
+        """
+        Automatically detail the data lineage/provenance for the source data,
+        and prepare to output it as a file in self.save()
+
+        Returns:
+            Dict: Keys and values containing data lineage/provenance information
+        """
+        source_information = SourceTraceability(lineage=self.filepath)
+
+        return source_information

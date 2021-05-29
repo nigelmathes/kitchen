@@ -114,4 +114,3 @@ class SousChef:
 if __name__ == "__main__":
     sous_chef = SousChef()
     test_ingredients = sous_chef.prepare_ingredients()
-    print(test_ingredients)

@@ -7,5 +7,5 @@ I.e. A series of web pages describing the data, showing common EDA properties of
 Located in `window_display/custom_display.py`
 
 ## Static Reports (Auto-EDA)
-### SweetViz & dataprep
+### Dataprep
 Located in `window_display/auto_display.py`

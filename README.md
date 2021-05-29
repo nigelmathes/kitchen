@@ -8,51 +8,42 @@ Start it up, and navigate to the following URL's to access information about you
 
 ```
 localhost:81/docs      # Browsable API endpoints
-localhost:81/dataprep  # dataprep dashboard (Auto-EDA)
-localhost:81/sweetviz  # SweetViz dashboard (Auto-EDA)
+localhost:8443         # Visual Studio Code IDE
+localhost:8888         # Jupyter Lab Instance
 localhost:80           # Streamlit dashboard (Customizable EDA)
 ```
 
 ## Installation
-Clone repo, then:
+To start the development server with all the included utilities, clone the repo and then:
 
 ```bash
-docker-compose up --build kitchen
+docker-compose up --build kitchen-dev
 ```
 
+This will start the API server, the Visual Studio Code server, the Jupyter Lab server,
+and the Streamlit server.
+
 `TODO: Make as simple as possible.`
+`TODO: Make local development as easy as cloud development.`
 
-## Why did I choose ____ when I could have chosen ____?
+## What's Included?
 
-### Streamlit vs. ???
-- Streamlit is just great
-- Best utility to build customizable dashboards in Python
+### Custom EDA: Streamlit
+- Build customizable dashboards in Python
 
 https://github.com/streamlit/streamlit
 
-### Automatic EDA: Dataprep vs. SweetViz vs. Pandas-Profiling
-#### dataprep
-- Generates HTML quickly
-- HTML in browser loads slowly
-- Generated reports contain all EDA I would want, except they don't show variable
- correlations in the variable sub-tabs. That said, the correlation plot does this.
-- Plots generated have mouse-over capabilities
+### Automatic EDA: Dataprep
+- Generates HTML reports with exhaustive, mouse-over-able plots
 
 https://github.com/sfu-db/dataprep
 
-#### SweetViz
-- Generates HTML slowly
-- HTML in browser loads quickly
-- Generated reports contain most of the EDA I would want
-- Plots do not have mouse-over
-- Web page aspect ratios do not display well on non-1080p displays
+### Visual Studio Code In Browser
+- Run an IDE in browser 
 
-https://github.com/fbdesignpro/sweetviz
+https://github.com/cdr/code-server
 
-#### Pandas-Profiliing
-- Generates HTML slowly (unless minimal used)
-- HTML in browser loads slowly (but faster than Dataprep)
-- Generated reports lack many EDA features, such as correlations
-- Plots do not have mouse-over 
+### Jupyter Lab
+- Run interactive Python notebooks in browser
 
-https://github.com/pandas-profiling/pandas-profiling
+https://github.com/jupyterlab/jupyterlab

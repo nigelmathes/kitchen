@@ -104,7 +104,6 @@ class HeadChef:
         create_window_display(
             data_to_display=test_data,
             display_name="model_results",
-            display_type="dataprep",
         )
 
     @staticmethod
