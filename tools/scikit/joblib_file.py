@@ -13,6 +13,7 @@ class JoblibFile(Tool):
     Loads/saves text data as a Python list from/to a text file
     on any ``fsspec``-supported file-like system
     """
+
     def load(self) -> List[str]:
         """
         Load a scikit-learn model from a joblib file

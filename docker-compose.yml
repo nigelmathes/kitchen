@@ -2,6 +2,20 @@ version: "3.8"
 
 services:
 
+  base-kitchen:
+    build:
+      context: .
+      dockerfile: dockerfiles/kitchen.Dockerfile
+      target: base-kitchen
+    image: base-kitchen:latest
+    container_name: base-kitchen-container
+    ports:
+      - 81:81
+    volumes:
+      - $HOME/.aws:/root/.aws
+    restart: unless-stopped
+    command: hypercorn server.server:app --bind 0.0.0.0:81
+
   dev-kitchen:
     build:
       context: .
@@ -23,14 +37,3 @@ services:
       & streamlit run window_display/custom_display.py --server.port 80
       & code-server --bind-addr 0.0.0.0:8443 --auth none --disable-telemetry --cert
       "
-
-  base-kitchen:
-    build:
-      context: .
-      dockerfile: dockerfiles/kitchen.Dockerfile
-      target: base-kitchen
-    image: base-kitchen:latest
-    container_name: base-kitchen-container
-    volumes:
-      - $HOME/.aws:/root/.aws
-    command: python -m head_chef.head_chef

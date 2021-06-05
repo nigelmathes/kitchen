@@ -5,9 +5,10 @@ from tools.tool import Tool
 
 class CsvFile(Tool):
     """
-    Loads/saves CSV data as a Pandas DataFrame from/to a text file
+    Loads/saves data as a Pandas DataFrame from/to a CSV file
     on any ``fsspec``-supported file-like system
     """
+
     def load(self) -> pd.DataFrame:
         """
         Load text data from a CSV file into a Pandas DataFrame
@@ -30,7 +31,7 @@ class CsvFile(Tool):
         Returns:
             None
         """
-        with self.filesystem.open(path=self.filepath, mode='w') as file:
+        with self.filesystem.open(path=self.filepath, mode="w") as file:
             data.to_csv(file, index=False)
 
         return None

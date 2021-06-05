@@ -14,11 +14,7 @@ class Tool(abc.ABC):
     on any ``fsspec``-supported file-like system
     """
 
-    def __init__(
-        self,
-        filepath: str,
-        credentials: Dict[str, Any] = None,
-    ) -> None:
+    def __init__(self, filepath: str, credentials: Dict[str, Any] = None,) -> None:
         """
         Instantiate a ``Tool`` object, meant to save and load data
 
@@ -44,16 +40,18 @@ class Tool(abc.ABC):
         """
         Load data
         """
-        raise NotImplementedError("You are using the Tool base class and must "
-                                  "implement a load() method")
+        raise NotImplementedError(
+            "You are using the Tool base class and must " "implement a load() method"
+        )
 
     @abc.abstractmethod
     def save(self, data: Any) -> None:
         """
         Save data
         """
-        raise NotImplementedError("You are using the Tool base class and must "
-                                  "implement a save() method")
+        raise NotImplementedError(
+            "You are using the Tool base class and must " "implement a save() method"
+        )
 
     def exists(self) -> bool:
         """

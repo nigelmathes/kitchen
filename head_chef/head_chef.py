@@ -2,9 +2,8 @@
 The Head Chef Cooks the Final Dish
 I.e. the transform stage of your ETL process.
 """
-from importlib import import_module
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import anyconfig
 import pandas as pd
@@ -13,6 +12,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 from sous_chef.sous_chef import SousChef
 from server.data_models import FullCourse
+from tools.prepare_tools import prepare_tools
 from window_display.auto_display import create_window_display
 
 
@@ -49,7 +49,7 @@ class HeadChef:
             self.full_course[key] = FullCourse(**value)
 
             # Find the right tool for the job (data saving)
-            self.tools[key] = self.prepare_tools(
+            self.tools[key] = prepare_tools(
                 python_format=self.full_course[key].python_format,
                 file_format=self.full_course[key].file_format,
             )
@@ -61,7 +61,7 @@ class HeadChef:
         i.e. Perform all transformation tasks to create the desired output data
 
         This can be anything from training a machine learning model, adding
-        columns to a DataFrame, performing inference with an ML model, or anything
+        columns to a DataFrame, performing inference with an ML model, etc. Anything
         really that creates the desired output data that this Head Chef is going to
         create and serve.
 
@@ -84,8 +84,9 @@ class HeadChef:
         random_forest_classifier.fit(features, labels)
 
         # Save the trained model
-        model_tool = self.tools["classifier_model"](filepath=self.full_course[
-            "classifier_model"].location)
+        model_tool = self.tools["classifier_model"](
+            filepath=self.full_course["classifier_model"].location
+        )
         model_tool.save(data=random_forest_classifier)
 
         # Evaluate the trained model and save results
@@ -96,14 +97,14 @@ class HeadChef:
         test_data["model_predictions"] = eval_results
 
         # Save the evaluation results
-        results_tool = self.tools["model_results"](filepath=self.full_course[
-            "model_results"].location)
+        results_tool = self.tools["model_results"](
+            filepath=self.full_course["model_results"].location
+        )
         results_tool.save(data=test_data)
 
         # Create a window display with the results
         create_window_display(
-            data_to_display=test_data,
-            display_name="model_results",
+            data_to_display=test_data, display_name="model_results",
         )
 
     @staticmethod
@@ -163,31 +164,6 @@ class HeadChef:
         data_to_clean.fillna(0, inplace=True)
 
         return data_to_clean
-
-    @staticmethod
-    def prepare_tools(python_format: str, file_format: str) -> Callable:
-        """
-        Find the right class to take the ingredients from their raw (file) format
-        to their prepared (python) format
-
-        Args:
-            python_format (str): The Python data type to read the data into, such
-                                 as 'pandas'
-            file_format (str): The format of the file to read, such as 'csv'
-
-        Returns:
-            (Callable): The function to extract the data
-        """
-        # Create the string to import the module needed to load the data
-        file_to_import_from = f"tools.{python_format}.{file_format}"
-
-        # Cast to CamelCase for class name
-        tool_to_import = ''.join(word.title() for word in file_format.split('_'))
-
-        # Import class
-        tool_to_use = getattr(import_module(file_to_import_from), tool_to_import)
-
-        return tool_to_use
 
 
 if __name__ == "__main__":

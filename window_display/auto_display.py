@@ -13,9 +13,7 @@ from dataprep.eda import create_report
 STATIC_DIR = Path("/app/static_reports")
 
 
-def create_window_display(
-    data_to_display: pd.DataFrame, display_name: str
-) -> None:
+def create_window_display(data_to_display: pd.DataFrame, display_name: str) -> None:
     """
     Create a window display from a table of data to advertise your dish
 

@@ -17,7 +17,7 @@ localhost:80           # Streamlit dashboard (Customizable EDA)
 To start the development server with all the included utilities, clone the repo and then:
 
 ```bash
-docker-compose up --build kitchen-dev
+docker-compose up --build dev-kitchen
 ```
 
 This will start the API server, the Visual Studio Code server, the Jupyter Lab server,

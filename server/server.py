@@ -4,9 +4,12 @@ REST endpoints to discover, inspect, and acquire data produced in the data pod
 from pathlib import Path
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, HTMLResponse, PlainTextResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+
+from head_chef.head_chef import HeadChef
+from server.presigned_urls import create_presigned_url
 
 app = FastAPI()
 
@@ -16,16 +19,23 @@ app.mount(
 templates = Jinja2Templates(directory="static_reports")
 
 
-@app.get("/data_products")
-async def get_data_products() -> JSONResponse:
+@app.get("/full_course")
+async def get_full_course() -> JSONResponse:
     """
-    Gets available data products
+    Gets the full course served by the Head Chef
+    i.e. Get pre-signed URLs to download all of the data products from this node
 
     Returns:
-        JSONResponse: JSON serialized dictionary listing data sources as keys, with
-                      schema as values
+        JSONResponse: JSON serialized dictionary listing names of data sources as
+                      keys and pre-signed URLs to these sources as values
     """
-    return JSONResponse("Not Implemented")
+    head_chef = HeadChef()
+
+    urls_to_deliver = {}
+    for dish_name, dish in head_chef.full_course.items():
+        urls_to_deliver[dish_name] = create_presigned_url(filepath=dish.location)
+
+    return JSONResponse(content=urls_to_deliver)
 
 
 @app.get("/reports", response_class=HTMLResponse)

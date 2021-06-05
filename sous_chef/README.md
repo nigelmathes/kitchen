@@ -3,7 +3,8 @@ I.e. the extract stage of your ETL process.
 
 ## The Sous Chef
 In `sous_chef.py` is the `SousChef` class, which does all the prep work for the
- `HeadChef` (`head_chef/head_chef.py`).
+ `HeadChef` (`head_chef/head_chef.py`). This class converts data sources into 
+python-native objects.
  
 The `SousChef` is in charge of reading the ingredients list in `ingredients.yaml`
 , which you should edit with your input data. Specifically, you need to include the
@@ -23,12 +24,12 @@ name_of_data:
 ```
 
 ### Types available for `raw_format`:
-`csv_file`, `json_file`, `yaml_file`, `text_file`, `joblib_file`
+`csv_file`, `json_file`, `yaml_file`, `text_file`, `joblib_file`, `parquet_file`
 
 _More coming soon!_
 
 ### Types available for `prepared_format`:
-`pandas.DataFrame`, `scikit`, `list`, `dict`
+`pandas`, `scikit`, `list`, `dict`
 
 _More coming soon!_
 

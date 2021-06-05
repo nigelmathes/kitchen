@@ -2,13 +2,13 @@
 The Sous Chef Prepares the Ingredients
 I.e. the extract stage of your ETL process.
 """
-from importlib import import_module
 from pathlib import Path
-from typing import Dict, Any, Callable
+from typing import Dict, Any
 
 import anyconfig
 
 from server.data_models import Ingredient
+from tools.prepare_tools import prepare_tools
 
 
 class SousChef:
@@ -55,12 +55,13 @@ class SousChef:
 
         for name, ingredient in self.ingredients.items():
             ingredients_to_deliver[name] = self.prepare_one_ingredient(
-                ingredient=ingredient, name=name
+                ingredient=ingredient
             )
 
         return ingredients_to_deliver
 
-    def prepare_one_ingredient(self, ingredient: Ingredient, name: str) -> Any:
+    @staticmethod
+    def prepare_one_ingredient(ingredient: Ingredient) -> Any:
         """
         Prepare one ingredient by using Ingredient.raw_format and
         Ingredient.prepared_format to identify the correct function to read
@@ -68,14 +69,14 @@ class SousChef:
 
         Args:
             ingredient (Ingredient): One ingredient, which is the dataclass Ingredient
-            name (str): The name of the ingredient
 
         Returns:
             (Any) Data loaded into a Python data structure, such as a Pandas DataFrame
         """
         # Find the right tool for the job (data loading)
-        tool = self.prepare_tools(python_format=ingredient.python_format,
-                                  file_format=ingredient.file_format)
+        tool = prepare_tools(
+            python_format=ingredient.python_format, file_format=ingredient.file_format
+        )
 
         # Instantiate object
         data_load_tool = tool(filepath=ingredient.location)
@@ -84,31 +85,6 @@ class SousChef:
         loaded_data = data_load_tool.load()
 
         return loaded_data
-
-    @staticmethod
-    def prepare_tools(python_format: str, file_format: str) -> Callable:
-        """
-        Find the right class to take the ingredients from their raw form
-        to their prepared form
-
-        Args:
-            python_format (str): The Python data type to read the data into, such
-                                   as 'pandas'
-            file_format (str): The raw data format, such as 'csv'
-
-        Returns:
-            (Callable): The function to Extract the data
-        """
-        # Create the string to import the module needed to load the data
-        file_to_import_from = f"tools.{python_format}.{file_format}"
-
-        # Cast to CamelCase for class name
-        tool_to_import = ''.join(word.title() for word in file_format.split('_'))
-
-        # Import class
-        tool_to_use = getattr(import_module(file_to_import_from), tool_to_import)
-
-        return tool_to_use
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ class JsonFile(Tool):
     Loads/saves data as a Python dict from/to a JSON file
     on any ``fsspec``-supported file-like system
     """
+
     def load(self) -> Dict:
         """
         Load data from a JSON file into a Python dictionary
@@ -30,5 +31,5 @@ class JsonFile(Tool):
         Returns:
             None
         """
-        with self.filesystem.open(path=self.filepath, mode='w') as file:
+        with self.filesystem.open(path=self.filepath, mode="w") as file:
             json.dump(data, file)

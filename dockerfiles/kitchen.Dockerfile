@@ -6,7 +6,7 @@ FROM python:3.9.5-slim-buster AS base-kitchen
 ENV PYTHONUNBUFFERED 1
 
 # Instal gcc compiler to build dependencies and link the python and python3 commands
-RUN apt-get update && apt-get install -y gcc curl git && \
+RUN apt-get update && apt-get install -y gcc g++ curl git && \
     rm -rf /var/lib/apt/lists/*
 RUN ln -sv /usr/bin/python3 /usr/bin/python
 
@@ -15,6 +15,7 @@ RUN pip install --upgrade pip
 
 # Install packages
 # Data IO packages
+RUN pip install pyarrow
 
 # API serving packages
 RUN pip install fastapi
