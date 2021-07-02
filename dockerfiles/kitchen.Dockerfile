@@ -1,56 +1,40 @@
-# 1st stage: Base Kitchen dependencies
-FROM python:3.9.5-slim-buster AS base-kitchen
+# ============== Base Container ==============
+FROM python:3.9.5-slim AS base-kitchen
 
-# The enviroment variable ensures that the python output is set straight
-# to the terminal without buffering it first
-ENV PYTHONUNBUFFERED 1
-
-# Instal gcc compiler to build dependencies and link the python and python3 commands
-RUN apt-get update && apt-get install -y gcc g++ curl git && \
+# Instal build dependencies
+RUN apt-get update && apt-get install -y gcc g++ && \
     rm -rf /var/lib/apt/lists/*
-RUN ln -sv /usr/bin/python3 /usr/bin/python
 
 # Upgrade pip
-RUN pip install --upgrade pip
-
-# Install packages
-# Data IO packages
-RUN pip install pyarrow
+RUN pip install --no-cache-dir --upgrade pip
 
 # API serving packages
-RUN pip install fastapi
-RUN pip install hypercorn
-RUN pip install aiofiles
-RUN pip install jinja2
+RUN pip install --no-cache-dir fastapi hypercorn aiofiles jinja2
 
 # Data exploration tools
-RUN pip install dataprep
-RUN pip install streamlit
+RUN pip install --no-cache-dir dataprep streamlit
 
-# Config parsing
-RUN pip install anyconfig
-
-# Interact with all data as a file system
-RUN pip install s3fs
-RUN pip install fsspec
+# Data IO packages
+RUN pip install --no-cache-dir anyconfig s3fs fsspec pyarrow
 
 # Data science utilities
-RUN pip install pandas
-RUN pip install scikit-learn
-RUN pip install joblib
-RUN pip install opencv-python-headless
-
-# Copy data app into container
-COPY . /app
+RUN pip install --no-cache-dir pandas scikit-learn joblib opencv-python-headless
 
 # Work in the application directory
 WORKDIR /app
 
-# 2nd stage: Dev dependencies
+# Copy app code
+COPY . /app
+
+# ============== Dev environment ==============
 FROM base-kitchen AS dev-kitchen
 
-# Jupyter Lab
-RUN pip install jupyterlab
+# Instal runtime dependencies
+RUN apt-get update && apt-get install -y curl git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Jupyter Lab and dev tools
+RUN pip install --no-cache-dir jupyterlab black pylint
 
 # Install VS Code-Server and useful Python Extensions
 RUN curl -fsSL https://code-server.dev/install.sh | sh
@@ -60,7 +44,3 @@ RUN code-server --install-extension LittleFoxTeam.vscode-python-test-adapter --f
 RUN code-server --install-extension dongli.python-preview --force
 RUN code-server --install-extension CoenraadS.bracket-pair-colorizer-2 --force
 RUN code-server --install-extension jdinhlife.gruvbox --force
-
-# Python formatting and linting support
-RUN pip install black
-RUN pip install pylint
