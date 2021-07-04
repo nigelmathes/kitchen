@@ -1,4 +1,4 @@
-# The Server Serves the Dish from the Head Chef
+# The Wait Staff Serve the Dish from the Head Chef
 I.e. Provide a series of API endpoints that let one inspect and download data produced
 by this Kitchen.
 

@@ -14,7 +14,7 @@ def create_presigned_url(filepath: str, expiration: int = 120) -> str:
         expiration (int): Time in seconds before the link expires. Default 2 minutes.
 
     Returns:
-        str: Pre-signed URL
+        str: Pre-signed URL pointing to the file to be downloaded
     """
 
     # Generate a pre-signed URL for the S3 object

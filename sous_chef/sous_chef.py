@@ -7,7 +7,7 @@ from typing import Dict, Any
 
 import anyconfig
 
-from server.data_models import Ingredient
+from wait_staff.data_models import Ingredient
 from tools.prepare_tools import prepare_tools
 
 

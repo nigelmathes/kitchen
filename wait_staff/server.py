@@ -1,5 +1,5 @@
 """
-REST endpoints to discover, inspect, and acquire data produced in the data pod
+REST endpoints to discover, inspect, and acquire data produced in the kitchen
 """
 from pathlib import Path
 
@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from head_chef.head_chef import HeadChef
-from server.presigned_urls import create_presigned_url
+from wait_staff.presigned_urls import create_presigned_url
 
 app = FastAPI()
 

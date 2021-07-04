@@ -11,7 +11,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 
 from sous_chef.sous_chef import SousChef
-from server.data_models import FullCourse
+from wait_staff.data_models import FullCourse
 from tools.prepare_tools import prepare_tools
 from window_display.auto_display import create_window_display
 

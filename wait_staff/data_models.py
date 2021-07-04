@@ -3,7 +3,7 @@ Pydantic Data Classes storing data inputs and outputs for this pod
 """
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Union, Dict, Optional, List
+from typing import Any, Union, Optional, List
 
 from pydantic import BaseModel
 

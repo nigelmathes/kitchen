@@ -5,7 +5,7 @@ from typing import Any, Dict
 import fsspec
 from fsspec.utils import infer_storage_options
 
-from server.data_models import SourceTraceability
+from wait_staff.data_models import SourceTraceability
 
 
 class Tool(abc.ABC):
