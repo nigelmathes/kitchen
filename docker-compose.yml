@@ -14,7 +14,7 @@ services:
     volumes:
       - $HOME/.aws:/root/.aws
     restart: unless-stopped
-    command: hypercorn server.server:app --bind 0.0.0.0:81
+    command: hypercorn wait_staff.server:app --bind 0.0.0.0:81
 
   dev-kitchen:
     build:
@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
     command: bash -c "
       jupyter lab --ip=0.0.0.0 --allow-root --no-browser
-      & hypercorn server.server:app --bind 0.0.0.0:81
+      & hypercorn wait_staff.server:app --bind 0.0.0.0:81
       & streamlit run window_display/custom_display.py --server.port 80
       & code-server --bind-addr 0.0.0.0:8443 --auth none --disable-telemetry --cert
       "

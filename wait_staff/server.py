@@ -48,6 +48,7 @@ async def get_reports(request: Request) -> Jinja2Templates.TemplateResponse:
     """
     path_to_html_reports = Path("/app") / "static_reports"
 
+    # Find static HTML reports files
     available_reports = list(path_to_html_reports.glob("*.html"))
 
     reports = list()
@@ -55,18 +56,9 @@ async def get_reports(request: Request) -> Jinja2Templates.TemplateResponse:
         if "index.html" not in str(report):
             reports.append((f"{str(report.stem)}", f"reports/{str(report.name)}"))
 
+    # Link to the custom report as well
+    reports.append(("Custom Report", "http://localhost:80"))
+
     return templates.TemplateResponse(
         "index.html", {"request": request, "reports": reports}
     )
-
-
-@app.get("/custom_report")
-async def get_custom_report() -> HTMLResponse:
-    """
-    Display link to the custom Streamlit report
-
-    Returns:
-        HTMLResponse: The link to the custom Streamlit report
-    """
-    html_link = '<a href="http://localhost:80">Custom Report</a>'
-    return HTMLResponse(html_link)
