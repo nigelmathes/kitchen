@@ -1,5 +1,4 @@
-import abc
-
+from abc import ABC, abstractmethod
 from typing import Any, Dict
 
 import fsspec
@@ -8,7 +7,7 @@ from fsspec.utils import infer_storage_options
 from wait_staff.data_models import SourceTraceability
 
 
-class Tool(abc.ABC):
+class Tool(ABC):
     """
     Base class for other classes that load data into Python objects from/to a file
     on any ``fsspec``-supported file-like system
@@ -35,7 +34,7 @@ class Tool(abc.ABC):
 
         self.filesystem = fsspec.filesystem(protocol=self.protocol, **credentials)
 
-    @abc.abstractmethod
+    @abstractmethod
     def load(self) -> Any:
         """
         Load data
@@ -44,7 +43,7 @@ class Tool(abc.ABC):
             "You are using the Tool base class and must " "implement a load() method"
         )
 
-    @abc.abstractmethod
+    @abstractmethod
     def save(self, data: Any) -> None:
         """
         Save data
@@ -64,7 +63,7 @@ class Tool(abc.ABC):
 
     def source(self) -> SourceTraceability:
         """
-        Automatically detail the data lineage/provenance for the source data,
+        Detail the data lineage/provenance for the source data,
         and prepare to output it as a file in self.save()
 
         Returns:

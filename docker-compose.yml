@@ -14,7 +14,10 @@ services:
     volumes:
       - $HOME/.aws:/root/.aws
     restart: unless-stopped
-    command: hypercorn wait_staff.server:app --bind 0.0.0.0:81
+    command: bash -c "
+      python -m head_chef.rf_model_chef
+      & hypercorn wait_staff.server:app --bind 0.0.0.0:81
+      "
 
   dev-kitchen:
     build:
